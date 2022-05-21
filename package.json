@@ -1,0 +1,13 @@
+{
+    "name": "firebase-emulators-managing-gateways",
+    "version": "1.0.0",
+    "description": "firebase local emulator project",
+    "scripts": {
+        "emulators:start": "firebase emulators:start --import emulators_data --export-on-exit",
+        "emulators:stop": "lsof -ti :4400 | xargs --no-run-if-empty kill"
+    },
+    "engines": {
+        "node": ">=16.15.0"
+    },
+    "author": "Adrian"
+}
