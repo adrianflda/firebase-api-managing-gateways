@@ -4,7 +4,7 @@ import IGateway from '../interfaces/IGateway'
 import GatewayService from '../services/GatewayService'
 
 export default class GatewayController {
-  async create(req: Request, res: Response) {
+  async upsert(req: Request, res: Response) {
     try {
       const {
         serial,
@@ -26,38 +26,8 @@ export default class GatewayController {
       res.status(200)
       res.json({
         status: 'success',
-        message: 'Gateway added successfully',
-        data: newGatewayResponse,
-      })
-    } catch (error: any) {
-      res.status(error.httpStatusCode || 500).json(error.message)
-    }
-  }
-
-  async update(req: Request, res: Response) {
-    try {
-      const {
-        serial,
-        name,
-        address,
-        devices,
-        deleted,
-        ...remainingData
-      } = req.body as unknown as IGateway
-
-      if (Object.keys(remainingData).length > 0) {
-        throw new InvalidValueError(`Unknown data ${Object.keys(remainingData).join(', ')}`)
-      }
-
-      const newGatewayResponse = await GatewayService.upsert({
-        serial, name, address, devices, deleted
-      })
-
-      res.status(200)
-      res.json({
-        status: 'success',
-        message: 'Gateway updated successfully',
-        data: newGatewayResponse,
+        message: 'Gateway processed successfully',
+        data: { entries: [newGatewayResponse] },
       })
     } catch (error: any) {
       res.status(error.httpStatusCode || 500).json(error.message)
