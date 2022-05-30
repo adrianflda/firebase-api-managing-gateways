@@ -2,6 +2,7 @@ import { Request, Response } from 'express'
 import InvalidValueError from '../errors/InvalidValueError'
 import IGateway from '../interfaces/IGateway'
 import GatewayService from '../services/GatewayService'
+import { info } from 'firebase-functions/lib/logger'
 
 export default class GatewayController {
   async upsert(req: Request, res: Response) {
@@ -68,7 +69,7 @@ export default class GatewayController {
       const {
         serial,
         ...remainingQueryParams
-      } = req.query as Record<string, string>
+      } = req.params as Record<string, string>
 
       if (Object.keys(remainingQueryParams).length > 0) {
         throw new InvalidValueError(`Unknown query params ${Object.keys(remainingQueryParams).join(', ')}`)
@@ -80,7 +81,7 @@ export default class GatewayController {
       res.json({
         status: 'success',
         message: 'Gateway read successfully',
-        data: gatewayResponse,
+        data: { entries: [gatewayResponse] },
       })
     } catch (error: any) {
       res.status(error.httpStatusCode || 500).json(error.message)
@@ -92,7 +93,7 @@ export default class GatewayController {
       const {
         serial,
         ...remainingQueryParams
-      } = req.query as Record<string, string>
+      } = req.params as Record<string, string>
 
       if (Object.keys(remainingQueryParams).length > 0) {
         throw new InvalidValueError(`Unknown query params ${Object.keys(remainingQueryParams).join(', ')}`)
@@ -104,7 +105,7 @@ export default class GatewayController {
       res.json({
         status: 'success',
         message: 'Gateway deleted successfully',
-        data: gatewayResponse,
+        data: { entries: [gatewayResponse] },
       })
     } catch (error: any) {
       res.status(error.httpStatusCode || 500).json(error.message)
