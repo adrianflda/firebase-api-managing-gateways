@@ -8,8 +8,8 @@ export default class GatewayRoutes {
   public routes(api): any {
     this.router.get('/', this.gatewayController.list)
     this.router.post('/', this.gatewayController.upsert)
-    this.router.get('/:id', this.gatewayController.get)
-    this.router.delete('/:id', this.gatewayController.delete)
+    this.router.get('/:serial', this.gatewayController.get)
+    this.router.delete('/:serial', this.gatewayController.delete)
 
     api.use('/gateways', this.router)
   }
