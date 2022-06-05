@@ -1,12 +1,15 @@
-import { Request, Response } from 'express'
+import { Response } from 'express'
 import InvalidValueError from '../errors/InvalidValueError'
 import IGateway from '../interfaces/IGateway'
 import GatewayService from '../services/GatewayService'
 import { info } from 'firebase-functions/lib/logger'
+import { IUser } from '../interfaces/IUser'
+import { IRequest } from '../interfaces/IRequest'
 
 export default class GatewayController {
-  async upsert(req: Request, res: Response) {
+  async upsert(req: IRequest, res: Response) {
     try {
+      const user = req.user as IUser
       const {
         serial,
         name,
@@ -20,7 +23,7 @@ export default class GatewayController {
         throw new InvalidValueError(`Unknown data ${Object.keys(remainingData).join(', ')}`)
       }
 
-      const newGatewayResponse = await GatewayService.upsert({
+      const newGatewayResponse = await GatewayService.upsert(user.uid, {
         serial, name, address, devices, deleted
       })
 
@@ -35,8 +38,9 @@ export default class GatewayController {
     }
   }
 
-  async list(req: Request, res: Response) {
+  async list(req: IRequest, res: Response) {
     try {
+      const user = req.user as IUser
       const {
         limit,
         lastElementId,
@@ -51,7 +55,7 @@ export default class GatewayController {
         limit: typeof limit === 'string' ? parseInt(limit || '10') : limit || 0,
         lastElementId: `${lastElementId}`
       }
-      const gatewayResponse = await GatewayService.list(filter)
+      const gatewayResponse = await GatewayService.list(user.uid, filter)
 
       res.status(200)
       res.json({
@@ -64,8 +68,9 @@ export default class GatewayController {
     }
   }
 
-  async get(req: Request, res: Response): Promise<void> {
+  async get(req: IRequest, res: Response): Promise<void> {
     try {
+      const user = req.user as IUser
       const {
         serial,
         ...remainingQueryParams
@@ -75,7 +80,7 @@ export default class GatewayController {
         throw new InvalidValueError(`Unknown query params ${Object.keys(remainingQueryParams).join(', ')}`)
       }
 
-      const gatewayResponse = await GatewayService.get(serial)
+      const gatewayResponse = await GatewayService.get(user.uid, serial)
 
       res.status(200)
       res.json({
@@ -88,8 +93,9 @@ export default class GatewayController {
     }
   }
 
-  async delete(req: Request, res: Response) {
+  async delete(req: IRequest, res: Response) {
     try {
+      const user = req.user as IUser
       const {
         serial,
         ...remainingQueryParams
@@ -99,7 +105,7 @@ export default class GatewayController {
         throw new InvalidValueError(`Unknown query params ${Object.keys(remainingQueryParams).join(', ')}`)
       }
 
-      const gatewayResponse = await GatewayService.delete(serial)
+      const gatewayResponse = await GatewayService.delete(user.uid, serial)
 
       res.status(200)
       res.json({

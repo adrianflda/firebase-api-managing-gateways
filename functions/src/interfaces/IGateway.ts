@@ -1,4 +1,4 @@
-import IDevice from "./IDevice";
+import IDevice from './IDevice'
 
 export default interface IGateway {
     serial: string,
