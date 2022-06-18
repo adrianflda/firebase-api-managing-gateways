@@ -1,5 +1,5 @@
 {
-    "name": "firebase-emulators-managing-gateways",
+    "name": "firebase-api-managing-gateways",
     "version": "1.0.0",
     "description": "firebase local emulator project",
     "scripts": {
